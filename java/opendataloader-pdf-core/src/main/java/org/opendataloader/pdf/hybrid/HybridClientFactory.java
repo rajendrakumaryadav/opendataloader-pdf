@@ -20,12 +20,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>Supported backends:
  * <ul>
  *   <li>{@code docling-fast} - Optimized docling SDK server</li>
+ *   <li>{@code hancom} - Hancom document parsing service</li>
+ *   <li>{@code azure} - Azure Document Intelligence</li>
  * </ul>
  *
  * <p>Future backends (not yet implemented):
  * <ul>
- *   <li>{@code hancom} - Hancom document parsing service</li>
- *   <li>{@code azure} - Azure Document Intelligence</li>
  *   <li>{@code google} - Google Document AI</li>
  * </ul>
  *
@@ -40,7 +40,7 @@ public class HybridClientFactory {
     /** Backend type constant for Hancom (not yet implemented). */
     public static final String BACKEND_HANCOM = "hancom";
 
-    /** Backend type constant for Azure (not yet implemented). */
+    /** Backend type constant for Azure Document Intelligence. */
     public static final String BACKEND_AZURE = "azure";
 
     /** Backend type constant for Google (not yet implemented). */
