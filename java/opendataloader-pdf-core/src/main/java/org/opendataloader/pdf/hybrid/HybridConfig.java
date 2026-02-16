@@ -31,6 +31,7 @@ public class HybridConfig {
     public static final String HANCOM_DEFAULT_URL = "https://dataloader.cloud.hancom.com/studio-lite/api";
 
     private String url;
+    private String apiKey;
     private int timeoutMs = DEFAULT_TIMEOUT_MS;
     private boolean fallbackToJava = true;
     private int maxConcurrentRequests = DEFAULT_MAX_CONCURRENT_REQUESTS;
@@ -63,6 +64,24 @@ public class HybridConfig {
      */
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    /**
+     * Gets the API key for backends that require key-based authentication (e.g., Azure).
+     *
+     * @return The API key, or null if not set.
+     */
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    /**
+     * Sets the API key for backends that require key-based authentication (e.g., Azure).
+     *
+     * @param apiKey The API key to use.
+     */
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     /**

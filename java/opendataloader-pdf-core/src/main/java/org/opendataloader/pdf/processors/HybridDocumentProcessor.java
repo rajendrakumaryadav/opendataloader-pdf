@@ -9,6 +9,7 @@ package org.opendataloader.pdf.processors;
 
 import org.opendataloader.pdf.api.Config;
 import org.opendataloader.pdf.containers.StaticLayoutContainers;
+import org.opendataloader.pdf.hybrid.AzureSchemaTransformer;
 import org.opendataloader.pdf.hybrid.DoclingSchemaTransformer;
 import org.opendataloader.pdf.hybrid.HancomSchemaTransformer;
 import org.opendataloader.pdf.hybrid.HybridClient;
@@ -364,6 +365,11 @@ public class HybridDocumentProcessor {
         // hancom uses HancomSchemaTransformer
         if (Config.HYBRID_HANCOM.equals(hybrid)) {
             return new HancomSchemaTransformer();
+        }
+
+        // azure uses AzureSchemaTransformer
+        if (Config.HYBRID_AZURE.equals(hybrid)) {
+            return new AzureSchemaTransformer();
         }
 
         throw new IllegalArgumentException("Unsupported hybrid backend: " + hybrid);

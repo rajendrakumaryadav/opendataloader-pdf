@@ -99,7 +99,7 @@ public class CLIOptions {
 
     // ===== Hybrid Mode =====
     private static final String HYBRID_LONG_OPTION = "hybrid";
-    private static final String HYBRID_DESC = "Hybrid backend for AI processing. Values: off (default), docling-fast";
+    private static final String HYBRID_DESC = "Hybrid backend for AI processing. Values: off (default), docling-fast, azure";
 
     private static final String HYBRID_MODE_LONG_OPTION = "hybrid-mode";
     private static final String HYBRID_MODE_DESC = "Hybrid triage mode. Values: auto (default, dynamic triage), full (skip triage, all pages to backend)";
@@ -116,6 +116,9 @@ public class CLIOptions {
 
     private static final String HYBRID_FALLBACK_LONG_OPTION = "hybrid-fallback";
     private static final String HYBRID_FALLBACK_DESC = "Fallback to Java processing on hybrid backend error. Default: true";
+
+    private static final String HYBRID_API_KEY_LONG_OPTION = "hybrid-api-key";
+    private static final String HYBRID_API_KEY_DESC = "API key for hybrid backends requiring authentication (e.g., Azure). Can also use AZURE_API_KEY environment variable";
 
     // ===== Export Options (internal) =====
     public static final String EXPORT_OPTIONS_LONG_OPTION = "export-options";
@@ -161,6 +164,7 @@ public class CLIOptions {
             new OptionDefinition(HYBRID_URL_LONG_OPTION, null, "string", null, HYBRID_URL_DESC, true),
             new OptionDefinition(HYBRID_TIMEOUT_LONG_OPTION, null, "string", "30000", HYBRID_TIMEOUT_DESC, true),
             new OptionDefinition(HYBRID_FALLBACK_LONG_OPTION, null, "boolean", true, HYBRID_FALLBACK_DESC, true),
+            new OptionDefinition(HYBRID_API_KEY_LONG_OPTION, null, "string", null, HYBRID_API_KEY_DESC, true),
             new OptionDefinition(EXPORT_OPTIONS_LONG_OPTION, null, "boolean", null, null, false),
 
             // Legacy options (not exported, for backward compatibility)
@@ -475,6 +479,19 @@ public class CLIOptions {
         }
         if (commandLine.hasOption(HYBRID_FALLBACK_LONG_OPTION)) {
             config.getHybridConfig().setFallbackToJava(true);
+        }
+        if (commandLine.hasOption(HYBRID_API_KEY_LONG_OPTION)) {
+            String apiKey = commandLine.getOptionValue(HYBRID_API_KEY_LONG_OPTION);
+            if (apiKey != null && !apiKey.trim().isEmpty()) {
+                config.getHybridConfig().setApiKey(apiKey.trim());
+            }
+        }
+        // Check AZURE_API_KEY environment variable if no API key set via CLI
+        if (config.getHybridConfig().getApiKey() == null || config.getHybridConfig().getApiKey().isEmpty()) {
+            String envApiKey = System.getenv("AZURE_API_KEY");
+            if (envApiKey != null && !envApiKey.trim().isEmpty()) {
+                config.getHybridConfig().setApiKey(envApiKey.trim());
+            }
         }
     }
 
