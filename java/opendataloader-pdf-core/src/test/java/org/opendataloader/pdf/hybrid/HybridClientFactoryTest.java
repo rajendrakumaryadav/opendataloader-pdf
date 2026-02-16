@@ -69,15 +69,26 @@ class HybridClientFactoryTest {
     }
 
     @Test
-    void testCreateAzureClientThrowsUnsupported() {
+    void testCreateAzureClientRequiresConfig() {
         HybridConfig config = new HybridConfig();
-
-        UnsupportedOperationException exception = assertThrows(
-            UnsupportedOperationException.class,
+        // Azure requires URL and API key, so creating without them should throw
+        assertThrows(
+            IllegalArgumentException.class,
             () -> HybridClientFactory.create("azure", config)
         );
+    }
 
-        assertTrue(exception.getMessage().contains("not yet implemented"));
+    @Test
+    void testCreateAzureClientWithConfig() {
+        HybridConfig config = new HybridConfig();
+        config.setUrl("https://test.cognitiveservices.azure.com");
+        config.setApiKey("test-key");
+
+        HybridClient client = HybridClientFactory.create("azure", config);
+        assertNotNull(client);
+        assertInstanceOf(AzureClient.class, client);
+
+        ((AzureClient) client).shutdown();
     }
 
     @Test
@@ -137,9 +148,15 @@ class HybridClientFactoryTest {
     }
 
     @Test
+    void testIsSupportedAzure() {
+        assertTrue(HybridClientFactory.isSupported("azure"));
+        assertTrue(HybridClientFactory.isSupported("AZURE"));
+        assertTrue(HybridClientFactory.isSupported("Azure"));
+    }
+
+    @Test
     void testIsSupportedUnsupportedBackends() {
         assertFalse(HybridClientFactory.isSupported("docling"));
-        assertFalse(HybridClientFactory.isSupported("azure"));
         assertFalse(HybridClientFactory.isSupported("google"));
         assertFalse(HybridClientFactory.isSupported("unknown"));
     }
@@ -156,6 +173,7 @@ class HybridClientFactoryTest {
 
         assertTrue(supported.contains("docling-fast"));
         assertTrue(supported.contains("hancom"));
+        assertTrue(supported.contains("azure"));
         assertFalse(supported.contains("docling,"));
     }
 

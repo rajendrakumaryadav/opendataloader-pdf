@@ -150,7 +150,7 @@
       "type": "string",
       "required": false,
       "default": "off",
-      "description": "Hybrid backend for AI processing. Values: off (default), docling-fast"
+      "description": "Hybrid backend for AI processing. Values: off (default), docling-fast, azure"
     },
     {
       "name": "hybrid-mode",
@@ -183,6 +183,14 @@
       "required": false,
       "default": true,
       "description": "Fallback to Java processing on hybrid backend error. Default: true"
+    },
+    {
+      "name": "hybrid-api-key",
+      "shortName": null,
+      "type": "string",
+      "required": false,
+      "default": null,
+      "description": "API key for hybrid backends requiring authentication (e.g., Azure). Can also use AZURE_API_KEY environment variable"
     }
   ]
 }

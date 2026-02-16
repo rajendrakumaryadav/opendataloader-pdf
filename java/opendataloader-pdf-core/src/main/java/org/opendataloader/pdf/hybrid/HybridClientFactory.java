@@ -20,12 +20,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>Supported backends:
  * <ul>
  *   <li>{@code docling-fast} - Optimized docling SDK server</li>
+ *   <li>{@code hancom} - Hancom document parsing service</li>
+ *   <li>{@code azure} - Azure Document Intelligence</li>
  * </ul>
  *
  * <p>Future backends (not yet implemented):
  * <ul>
- *   <li>{@code hancom} - Hancom document parsing service</li>
- *   <li>{@code azure} - Azure Document Intelligence</li>
  *   <li>{@code google} - Google Document AI</li>
  * </ul>
  *
@@ -40,7 +40,7 @@ public class HybridClientFactory {
     /** Backend type constant for Hancom (not yet implemented). */
     public static final String BACKEND_HANCOM = "hancom";
 
-    /** Backend type constant for Azure (not yet implemented). */
+    /** Backend type constant for Azure Document Intelligence. */
     public static final String BACKEND_AZURE = "azure";
 
     /** Backend type constant for Google (not yet implemented). */
@@ -84,7 +84,7 @@ public class HybridClientFactory {
         } else if (BACKEND_HANCOM.equals(hybrid)) {
             return new HancomClient(config);
         } else if (BACKEND_AZURE.equals(hybrid)) {
-            throw new UnsupportedOperationException("Azure Document Intelligence backend is not yet implemented");
+            return new AzureClient(config);
         } else if (BACKEND_GOOGLE.equals(hybrid)) {
             throw new UnsupportedOperationException("Google Document AI backend is not yet implemented");
         } else {
@@ -132,6 +132,8 @@ public class HybridClientFactory {
                 ((DoclingFastServerClient) client).shutdown();
             } else if (client instanceof HancomClient) {
                 ((HancomClient) client).shutdown();
+            } else if (client instanceof AzureClient) {
+                ((AzureClient) client).shutdown();
             }
         }
         CLIENT_CACHE.clear();
@@ -149,7 +151,8 @@ public class HybridClientFactory {
         }
 
         String lowerHybrid = hybrid.toLowerCase();
-        return BACKEND_DOCLING_FAST.equals(lowerHybrid) || BACKEND_HANCOM.equals(lowerHybrid);
+        return BACKEND_DOCLING_FAST.equals(lowerHybrid) || BACKEND_HANCOM.equals(lowerHybrid)
+            || BACKEND_AZURE.equals(lowerHybrid);
     }
 
     /**
@@ -158,7 +161,7 @@ public class HybridClientFactory {
      * @return A string listing all supported backends.
      */
     public static String getSupportedBackends() {
-        return String.join(", ", BACKEND_DOCLING_FAST, BACKEND_HANCOM);
+        return String.join(", ", BACKEND_DOCLING_FAST, BACKEND_HANCOM, BACKEND_AZURE);
     }
 
     /**
