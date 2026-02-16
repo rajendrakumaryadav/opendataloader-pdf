@@ -402,7 +402,7 @@ public class AzureSchemaTransformerTest {
 
         ArrayNode cells = table.putArray("cells");
         // First cell spans 2 columns
-        addTableCellWithSpan(cells, 0, 0, "Header", 1, 2);
+        addTableCell(cells, 0, 0, "Header", 1, 2);
         addTableCell(cells, 1, 0, "A2", 1, 1);
         addTableCell(cells, 1, 1, "B2", 1, 1);
 
@@ -479,13 +479,4 @@ public class AzureSchemaTransformerTest {
         }
     }
 
-    private void addTableCellWithSpan(ArrayNode cells, int row, int col, String content,
-                                       int rowSpan, int colSpan) {
-        ObjectNode cell = cells.addObject();
-        cell.put("rowIndex", row);
-        cell.put("columnIndex", col);
-        cell.put("content", content);
-        cell.put("rowSpan", rowSpan);
-        cell.put("columnSpan", colSpan);
-    }
 }
